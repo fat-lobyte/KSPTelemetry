@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Reflection;
 
 namespace Telemetry
@@ -17,22 +18,59 @@ namespace Telemetry
             }
         }
 
+        private Dispatcher dispatcher = new Dispatcher();
 
-        private StreamWriter logfile_stream;
+        private DataSet mainDataset = null; // this should end up being a list or map
+        private string mainDatasetFilename;
+        private bool mainDatasetHeaderWritten = false;
 
         public TelemetryService()
         {
             string assemblyName = Assembly.GetExecutingAssembly().GetName().ToString();
-            string fileName = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, "log");
-
-            logfile_stream = new StreamWriter(fileName, false);
+            mainDatasetFilename = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, "csv");
         }
 
-
-        public void send(string id, double value)
+        public void CreateChannel(string path, Type type, string format = null)
         {
-            logfile_stream.WriteLine(id + ": " + value);
-            logfile_stream.Flush();
+            IChannel channel;
+
+            if (type == typeof(double))
+            {
+                channel = new ChannelDouble(path, format);
+            }
+            else
+            {
+                throw new NotImplementedException("Adding channels of type `" + type + "` is not (yet) supported");
+            }
+
+            dispatcher.AddChannel(path, channel);
+
+            // create a main dataset if it doesn't exist yet
+            if (mainDataset == null)
+                mainDataset = new DataSet(mainDatasetFilename);
+
+            mainDataset.AddChannel(channel);
+        }
+        
+
+        public void Send(string id, double value)
+        {
+            // on the first time calling send, we write out the main dataset header
+            if (mainDataset != null && !mainDatasetHeaderWritten)
+            {
+                mainDatasetHeaderWritten = true;
+                mainDataset.WriteHeader();
+            }
+
+            dispatcher.Send(id, value);
+        }
+
+        public void Update()
+        {
+            // TODO write some throttling / timing code here
+
+            if (mainDataset != null)
+                mainDataset.Write();
         }
     }
 }

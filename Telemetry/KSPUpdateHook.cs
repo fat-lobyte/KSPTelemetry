@@ -7,7 +7,7 @@ namespace Telemetry
     {
         public void Update()
         {
-
+            TelemetryService.Instance.Update();
         }
     }
 }
