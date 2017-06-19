@@ -9,7 +9,7 @@ namespace Telemetry.Test
     {
         private double ut;
 
-        public void Start()
+        public void Awake()
         {
             TelemetryService.Instance.CreateChannel("ut", typeof(double));
             TelemetryService.Instance.CreateChannel("altitude", typeof(double));
@@ -18,7 +18,7 @@ namespace Telemetry.Test
 
         int lastPartCount = 0;
 
-        public void Update()
+        public void FixedUpdate()
         {
             ut = Planetarium.GetUniversalTime();
 
