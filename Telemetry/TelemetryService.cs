@@ -40,7 +40,7 @@ namespace Telemetry
 
 
         private double lastWriteUT = 0.0;
-        private double lastFlushUT = 0.0;
+        private DateTime lastFlush = DateTime.UtcNow;
 
 
         public TelemetryService()
@@ -103,10 +103,11 @@ namespace Telemetry
                 lastWriteUT = ut;
             }
 
-            if (ut > lastFlushUT + Settings.FlushInterval)
+            DateTime now = DateTime.UtcNow;
+            if (lastFlush.AddSeconds(Settings.FlushInterval) < now)
             {
                 mainDataset.Flush();
-                lastFlushUT = ut;
+                lastFlush = now;
             }
         }
     }
