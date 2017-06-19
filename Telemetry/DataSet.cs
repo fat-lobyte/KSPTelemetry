@@ -37,7 +37,8 @@ namespace Telemetry
         {
             foreach(IChannel channel in channels)
             {
-                filestream.Write(channel.Render());
+                if (channel.WasUpdated)
+                    filestream.Write(channel.Render());
                 filestream.Write(settings.ColumnSeparator);
             }
 

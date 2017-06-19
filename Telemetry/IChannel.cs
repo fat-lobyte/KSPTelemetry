@@ -7,5 +7,8 @@
         string Render();
 
         void Send(object value);
+
+        bool WasUpdated { get; }
+
     }
 }
