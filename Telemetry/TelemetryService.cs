@@ -21,13 +21,23 @@ namespace Telemetry
 
         private Dispatcher dispatcher = new Dispatcher();
 
-        private DataSet mainDataset = null; // this should end up being a list or map
+        private DataSet mainDataset = null; // this should end up being a list or map of all output files
         private string mainDatasetFilename;
         private bool mainDatasetHeaderWritten = false;
 
+        internal class TelemetrySettings
+        {
+            public char ColumnSeparator = '\t';
 
-        public double WriteInterval = 1.0;
-        public double FlushInterval = 5.0;
+            public double WriteInterval = 1.0;
+            public double FlushInterval = 5.0;
+
+            public bool SkipUnUpdated = true;
+        };
+
+
+        TelemetrySettings Settings;
+
 
         private double lastWriteUT = 0.0;
         private double lastFlushUT = 0.0;
@@ -37,6 +47,8 @@ namespace Telemetry
         {
             string assemblyName = Assembly.GetExecutingAssembly().GetName().ToString();
             mainDatasetFilename = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, "csv");
+
+            Settings = new TelemetrySettings(); // TODO: load this from a file or something
         }
 
         public void CreateChannel(string path, Type type, string format = null)
@@ -56,7 +68,7 @@ namespace Telemetry
 
             // create a main dataset if it doesn't exist yet
             if (mainDataset == null)
-                mainDataset = new DataSet(mainDatasetFilename);
+                mainDataset = new DataSet(mainDatasetFilename, Settings);
 
             mainDataset.AddChannel(channel);
         }
@@ -81,13 +93,13 @@ namespace Telemetry
 
             double ut = Planetarium.GetUniversalTime();
 
-            if (ut > lastWriteUT + WriteInterval)
+            if (ut > lastWriteUT + Settings.WriteInterval)
             {
                 mainDataset.Write();
                 lastWriteUT = ut;
             }
 
-            if (ut > lastFlushUT + FlushInterval)
+            if (ut > lastFlushUT + Settings.FlushInterval)
             {
                 mainDataset.Flush();
                 lastFlushUT = ut;

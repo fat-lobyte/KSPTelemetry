@@ -6,14 +6,15 @@ namespace Telemetry
 {
     internal class DataSet
     {
-        private const string separator = "\t";
+        private readonly TelemetryService.TelemetrySettings settings;
         private List<IChannel> channels = new List<IChannel>();
 
         private StreamWriter filestream;
 
-        internal DataSet(string outfile)
+        internal DataSet(string outfile, TelemetryService.TelemetrySettings settings)
         {
             filestream = new StreamWriter(outfile, false);
+            this.settings = settings;
         }
 
         public void AddChannel(IChannel channel)
@@ -26,7 +27,7 @@ namespace Telemetry
             foreach (IChannel channel in channels)
             {
                 filestream.Write(channel.Name);
-                filestream.Write(separator);
+                filestream.Write(settings.ColumnSeparator);
             }
 
             filestream.Write('\n');
@@ -37,7 +38,7 @@ namespace Telemetry
             foreach(IChannel channel in channels)
             {
                 filestream.Write(channel.Render());
-                filestream.Write(separator);
+                filestream.Write(settings.ColumnSeparator);
             }
 
             filestream.Write('\n'); 
