@@ -12,18 +12,20 @@ namespace Telemetry
             get
             {
                 if (instance == null)
-                    instance = new TelemetryService();
+                {
+                    string assemblyName = Assembly.GetExecutingAssembly().GetName().ToString();
+                    string filename = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, "csv");
+
+                    instance = new TelemetryService(filename);
+                }
 
                 return instance;
             }
         }
 
-
         private Dispatcher dispatcher = new Dispatcher();
 
-        private DataSet mainDataset = null; // this should end up being a list or map of all output files
-        private string mainDatasetFilename;
-        private bool mainDatasetHeaderWritten = false;
+        private DataSet mainDataset; // this should end up being a list or map of all output files
 
         internal class TelemetrySettings
         {
@@ -35,7 +37,6 @@ namespace Telemetry
             public bool SkipUnUpdated = true;
         };
 
-
         TelemetrySettings Settings;
 
 
@@ -43,12 +44,10 @@ namespace Telemetry
         private DateTime lastFlush = DateTime.UtcNow;
 
 
-        public TelemetryService()
+        public TelemetryService(string basepath)
         {
-            string assemblyName = Assembly.GetExecutingAssembly().GetName().ToString();
-            mainDatasetFilename = Path.ChangeExtension(Assembly.GetExecutingAssembly().Location, "csv");
-
             Settings = new TelemetrySettings(); // TODO: load this from a file or something
+            mainDataset = new DataSet(basepath, Settings);
         }
 
         public void CreateChannel(string path, Type type, string format = null)
@@ -69,25 +68,18 @@ namespace Telemetry
             }
 
             dispatcher.AddChannel(path, channel);
-
-            // create a main dataset if it doesn't exist yet
-            if (mainDataset == null)
-                mainDataset = new DataSet(mainDatasetFilename, Settings);
-
             mainDataset.AddChannel(channel);
         }
         
 
         public void Send(string id, object value)
         {
-            // on the first time calling send, we write out the main dataset header
-            if (mainDataset != null && !mainDatasetHeaderWritten)
-            {
-                mainDatasetHeaderWritten = true;
-                mainDataset.WriteHeader();
-            }
-
             dispatcher.Send(id, value);
+        }
+
+        internal void InitCompleted()
+        {
+            mainDataset.WriteHeader();
         }
 
         public void Update()

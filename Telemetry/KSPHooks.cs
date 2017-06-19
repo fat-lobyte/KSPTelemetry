@@ -3,8 +3,13 @@
 namespace Telemetry
 {
     [KSPAddon(KSPAddon.Startup.Flight, false)]
-    class KSPUpdateHook : MonoBehaviour
+    class KSPHooks : MonoBehaviour
     {
+        public void Start()
+        {
+            TelemetryService.Instance.InitCompleted();
+        }
+
         public void Update()
         {
             TelemetryService.Instance.Update();
