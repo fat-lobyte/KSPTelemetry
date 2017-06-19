@@ -59,6 +59,10 @@ namespace Telemetry
             {
                 channel = new ChannelDouble(path, format);
             }
+            else if (type == typeof(int))
+            {
+                channel = new ChannelInt(path, format);
+            }
             else
             {
                 throw new NotImplementedException("Adding channels of type `" + type + "` is not (yet) supported");
@@ -74,7 +78,7 @@ namespace Telemetry
         }
         
 
-        public void Send(string id, double value)
+        public void Send(string id, object value)
         {
             // on the first time calling send, we write out the main dataset header
             if (mainDataset != null && !mainDatasetHeaderWritten)
