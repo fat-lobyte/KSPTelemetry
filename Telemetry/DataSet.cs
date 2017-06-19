@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Telemetry
@@ -40,6 +41,11 @@ namespace Telemetry
             }
 
             filestream.Write('\n'); 
+        }
+
+        internal void Flush()
+        {
+            filestream.Flush();
         }
     }
 }

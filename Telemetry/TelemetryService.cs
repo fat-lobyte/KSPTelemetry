@@ -18,11 +18,20 @@ namespace Telemetry
             }
         }
 
+
         private Dispatcher dispatcher = new Dispatcher();
 
         private DataSet mainDataset = null; // this should end up being a list or map
         private string mainDatasetFilename;
         private bool mainDatasetHeaderWritten = false;
+
+
+        public double WriteInterval = 1.0;
+        public double FlushInterval = 5.0;
+
+        private double lastWriteUT = 0.0;
+        private double lastFlushUT = 0.0;
+
 
         public TelemetryService()
         {
@@ -67,10 +76,22 @@ namespace Telemetry
 
         public void Update()
         {
-            // TODO write some throttling / timing code here
+            if (mainDataset == null)
+                return;
 
-            if (mainDataset != null)
+            double ut = Planetarium.GetUniversalTime();
+
+            if (ut > lastWriteUT + WriteInterval)
+            {
                 mainDataset.Write();
+                lastWriteUT = ut;
+            }
+
+            if (ut > lastFlushUT + FlushInterval)
+            {
+                mainDataset.Flush();
+                lastFlushUT = ut;
+            }
         }
     }
 }
