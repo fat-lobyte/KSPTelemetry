@@ -35,11 +35,15 @@ namespace Telemetry
 
         public void Write()
         {
+            uint channelIdx = 0;
+
             foreach(IChannel channel in channels)
             {
+                if (channelIdx++ > 0)
+                    filestream.Write(settings.ColumnSeparator);
+
                 if (channel.WasUpdated)
                     filestream.Write(channel.Render());
-                filestream.Write(settings.ColumnSeparator);
             }
 
             filestream.Write('\n'); 
