@@ -24,10 +24,14 @@ namespace Telemetry
 
         public void WriteHeader()
         {
+            uint channelIdx = 0;
+
             foreach (IChannel channel in channels)
             {
+                if (channelIdx++ > 0)
+                    filestream.Write(settings.ColumnSeparator);
+
                 filestream.Write(channel.Name);
-                filestream.Write(settings.ColumnSeparator);
             }
 
             filestream.Write('\n');
