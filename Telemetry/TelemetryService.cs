@@ -84,9 +84,6 @@ namespace Telemetry
 
         public void Update()
         {
-            if (mainDataset == null)
-                return;
-
             double ut = Planetarium.GetUniversalTime();
 
             if (ut > lastWriteUT + Settings.WriteInterval)
