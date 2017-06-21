@@ -69,7 +69,7 @@ namespace Telemetry
             return ds;
         }
 
-        public void AddChannel(string id, Type type, string format = null)
+        public void AddChannel<ChannelType>(string id, string format = null)
         {
             // do not add channels more than once
             if (dispatcher.GetChannel(id) != null)
@@ -77,17 +77,22 @@ namespace Telemetry
 
             // create new channel
             IChannel channel;
-            if (type == typeof(double))
+
+            if (typeof(ChannelType) == typeof(float)
+                || typeof(ChannelType) == typeof(double)
+                || typeof(ChannelType) == typeof(short)
+                || typeof(ChannelType) == typeof(ushort)
+                || typeof(ChannelType) == typeof(int)
+                || typeof(ChannelType) == typeof(uint)
+                || typeof(ChannelType) == typeof(long)
+                || typeof(ChannelType) == typeof(ulong))
             {
-                channel = new ChannelDouble(id, format);
-            }
-            else if (type == typeof(int))
-            {
-                channel = new ChannelInt(id, format);
+                channel = new NumericChannel<ChannelType>(id, format);
             }
             else
             {
-                throw new NotImplementedException("Adding channels of type `" + type + "` is not (yet) supported");
+                throw new NotImplementedException("Adding channels of type `"
+                    + typeof(ChannelType) + "` is not (yet) supported");
             }
 
             // TODO: this is where we find / create the data sets. For now, there's just one

@@ -12,7 +12,8 @@ namespace Telemetry
 
         public IChannel GetChannel(string id)
         {
-            if (channels.TryGetValue(id, out IChannel channel))
+            IChannel channel = null;
+            if (channels.TryGetValue(id, out channel))
                 return channel;
             else
                 return null;
@@ -25,8 +26,8 @@ namespace Telemetry
 
         public void Send(string path, object value)
         {
-
-            if (!channels.TryGetValue(path, out IChannel channel))
+            IChannel channel = null;
+            if (!channels.TryGetValue(path, out channel))
             {
 #if DEBUG
                 Debug.Log("Telemetry: tried to send value to unconfigured channel");

@@ -41,9 +41,8 @@
     <Reference Include="UnityEngine" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChannelInt.cs" />
+    <Compile Include="NumericChannel.cs" />
     <Compile Include="IChannel.cs" />
-    <Compile Include="ChannelDouble.cs" />
     <Compile Include="DataSet.cs" />
     <Compile Include="Dispatcher.cs" />
     <Compile Include="KSPHooks.cs" />
