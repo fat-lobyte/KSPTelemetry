@@ -35,7 +35,7 @@
 *.gif   binary
 
 # Jupyter notebooks: all line feeds, 
-*.ipynb   text=auto eol=lf
+*.ipynb   text=auto eol=lf linguist-generated
 
 
 ###############################################################################
