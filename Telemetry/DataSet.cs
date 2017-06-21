@@ -13,7 +13,13 @@ namespace Telemetry
 
         internal DataSet(string outfile, TelemetryService.TelemetrySettings settings)
         {
-            filestream = new StreamWriter(outfile, false);
+            bool append = false;
+            if (settings.OpenMode == TelemetryService.OpenMode.Append)
+                append = true;
+            else if (settings.OpenMode == TelemetryService.OpenMode.Overwrite)
+                append = false;
+
+            filestream = new StreamWriter(outfile, append);
             this.settings = settings;
         }
 

@@ -29,6 +29,12 @@ namespace Telemetry
 
         private DataSet mainDataset; // this should end up being a list or map of all output files
 
+        public enum OpenMode
+        {
+            Overwrite,
+            Append
+        }
+
         internal class TelemetrySettings
         {
             public char ColumnSeparator = '\t';
@@ -37,6 +43,8 @@ namespace Telemetry
             public double FlushInterval = 5.0;
 
             public bool SkipUnUpdated = true;
+
+            public OpenMode OpenMode = OpenMode.Overwrite;
         };
 
         TelemetrySettings Settings;
