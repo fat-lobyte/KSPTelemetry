@@ -84,8 +84,11 @@ namespace Telemetry
 
         public void Close()
         {
-            filestream.Close();
-            filestream = null;
+            if (filestream != null)
+            {
+                filestream.Close();
+                filestream = null;
+            }
         }
     }
 }
