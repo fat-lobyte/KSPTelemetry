@@ -7,7 +7,7 @@ namespace Telemetry
     {
         public void Start()
         {
-            TelemetryService.Instance.InitCompleted();
+            TelemetryService.Instance.Start();
         }
 
         public void Update()
@@ -17,8 +17,7 @@ namespace Telemetry
 
         public void OnDestroy()
         {
-            TelemetryService.Instance.Destroy();
-            TelemetryService.Instance = null;
+            TelemetryService.Instance.Shutdown();
         }
     }
 }

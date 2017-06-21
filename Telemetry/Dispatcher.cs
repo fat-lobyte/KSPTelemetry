@@ -10,9 +10,17 @@ namespace Telemetry
     {
         private Dictionary<string, IChannel> channels = new Dictionary<string, IChannel>();
 
-        public void AddChannel(string path, IChannel channel)
+        public IChannel GetChannel(string id)
         {
-            channels.Add(path, channel);
+            if (channels.TryGetValue(id, out IChannel channel))
+                return channel;
+            else
+                return null;
+        }
+
+        public void AddChannel(string id, IChannel channel)
+        {
+            channels.Add(id, channel);
         }
 
         public void Send(string path, object value)

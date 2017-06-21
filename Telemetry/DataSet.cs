@@ -9,17 +9,13 @@ namespace Telemetry
         private readonly TelemetryService.TelemetrySettings settings;
         private List<IChannel> channels = new List<IChannel>();
 
-        private StreamWriter filestream;
+        private StreamWriter filestream = null;
+        private string filename;
 
-        internal DataSet(string outfile, TelemetryService.TelemetrySettings settings)
+
+        internal DataSet(string filename, TelemetryService.TelemetrySettings settings)
         {
-            bool append = false;
-            if (settings.OpenMode == TelemetryService.OpenMode.Append)
-                append = true;
-            else if (settings.OpenMode == TelemetryService.OpenMode.Overwrite)
-                append = false;
-
-            filestream = new StreamWriter(outfile, append);
+            this.filename = filename;
             this.settings = settings;
         }
 
@@ -28,8 +24,27 @@ namespace Telemetry
             channels.Add(channel);
         }
 
-        public void WriteHeader()
+        public void Open()
         {
+            if (filestream != null)
+                return;
+
+            bool append = false;
+            if (settings.OpenMode == TelemetryService.OpenMode.Append)
+                append = true;
+            else if (settings.OpenMode == TelemetryService.OpenMode.Overwrite)
+                append = false;
+
+            filestream = new StreamWriter(filename, append);
+
+            WriteHeader();
+        }
+
+        private void WriteHeader()
+        {
+            if (filestream == null)
+                return;
+
             uint channelIdx = 0;
 
             foreach (IChannel channel in channels)
@@ -45,6 +60,9 @@ namespace Telemetry
 
         public void Write()
         {
+            if (filestream == null)
+                return;
+
             uint channelIdx = 0;
 
             foreach(IChannel channel in channels)
@@ -56,7 +74,7 @@ namespace Telemetry
                     filestream.Write(channel.Render());
             }
 
-            filestream.Write('\n'); 
+            filestream.Write('\n');
         }
 
         internal void Flush()
@@ -67,6 +85,7 @@ namespace Telemetry
         public void Close()
         {
             filestream.Close();
+            filestream = null;
         }
     }
 }
