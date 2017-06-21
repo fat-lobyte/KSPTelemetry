@@ -14,5 +14,11 @@ namespace Telemetry
         {
             TelemetryService.Instance.Update();
         }
+
+        public void OnDestroy()
+        {
+            TelemetryService.Instance.Destroy();
+            TelemetryService.Instance = null;
+        }
     }
 }

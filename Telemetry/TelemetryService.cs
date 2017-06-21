@@ -21,6 +21,8 @@ namespace Telemetry
 
                 return instance;
             }
+
+            internal set { instance = value; }
         }
 
         private Dispatcher dispatcher = new Dispatcher();
@@ -85,7 +87,6 @@ namespace Telemetry
         public void Update()
         {
             double ut = Planetarium.GetUniversalTime();
-
             if (ut > lastWriteUT + Settings.WriteInterval)
             {
                 mainDataset.Write();
@@ -98,6 +99,11 @@ namespace Telemetry
                 mainDataset.Flush();
                 lastFlush = now;
             }
+        }
+
+        public void Destroy()
+        {
+            mainDataset.Close();
         }
     }
 }

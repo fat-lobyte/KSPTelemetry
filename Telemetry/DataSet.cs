@@ -57,5 +57,10 @@ namespace Telemetry
         {
             filestream.Flush();
         }
+
+        public void Close()
+        {
+            filestream.Close();
+        }
     }
 }
