@@ -12,11 +12,11 @@ namespace TelemetryTest
 
         public void Awake()
         {
-            TelemetryService.Instance.AddChannel<double>("ut");
-            TelemetryService.Instance.AddChannel<double>("altitude", "0000");
-            TelemetryService.Instance.AddChannel<double>("srf_speed", "0000.0");
-            TelemetryService.Instance.AddChannel<double>("static_pressure");
-            TelemetryService.Instance.AddChannel<double>("partcount");
+            Telemetry.AddChannel<double>("ut");
+            Telemetry.AddChannel<double>("altitude", "0000");
+            Telemetry.AddChannel<double>("srf_speed", "0000.0");
+            Telemetry.AddChannel<double>("static_pressure");
+            Telemetry.AddChannel<double>("partcount");
         }
 
         int lastPartCount = 0;
@@ -25,18 +25,18 @@ namespace TelemetryTest
         {
             ut = Planetarium.GetUniversalTime();
 
-            TelemetryService.Instance.Send("ut", ut);
-            TelemetryService.Instance.Send("altitude", FlightGlobals.ship_altitude);
-            TelemetryService.Instance.Send("srf_speed", FlightGlobals.ship_srfSpeed);
+            Telemetry.Send("ut", ut);
+            Telemetry.Send("altitude", FlightGlobals.ship_altitude);
+            Telemetry.Send("srf_speed", FlightGlobals.ship_srfSpeed);
 
             double pressure = FlightGlobals.getStaticPressure();
             if (pressure != 0.0d)
-            TelemetryService.Instance.Send("static_pressure", pressure);
+                Telemetry.Send("static_pressure", pressure);
 
             if (lastPartCount != FlightGlobals.ActiveVessel.parts.Count)
             {
                 lastPartCount = FlightGlobals.ActiveVessel.parts.Count;
-                TelemetryService.Instance.Send("partcount", lastPartCount);
+                Telemetry.Send("partcount", lastPartCount);
             }
         }
     }

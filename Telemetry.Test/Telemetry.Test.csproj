@@ -41,6 +41,7 @@
     <Reference Include="UnityEngine" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="TelemetryWrapper.cs" />
     <Compile Include="TestTelemetry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
