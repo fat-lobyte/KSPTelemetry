@@ -1,8 +1,9 @@
 ﻿#if DEBUG
 
+using Telemetry;
 using UnityEngine;
 
-namespace Telemetry.Test
+namespace TelemetryTest
 {
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class EntryUpdate : MonoBehaviour
