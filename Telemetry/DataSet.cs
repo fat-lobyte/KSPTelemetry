@@ -10,12 +10,12 @@ namespace Telemetry
         private List<IChannel> channels = new List<IChannel>();
 
         private StreamWriter filestream = null;
-        private string filename;
+        public string Filename { get; private set; }
 
 
         internal DataSet(string filename, TelemetryService.TelemetrySettings settings)
         {
-            this.filename = filename;
+            this.Filename = filename;
             this.settings = settings;
         }
 
@@ -35,7 +35,7 @@ namespace Telemetry
             else if (settings.OpenMode == TelemetryService.OpenMode.Overwrite)
                 append = false;
 
-            filestream = new StreamWriter(filename, append);
+            filestream = new StreamWriter(Filename, append);
 
             WriteHeader();
         }
