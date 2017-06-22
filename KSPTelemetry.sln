@@ -1,14 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26430.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telemetry", "Telemetry\Telemetry.csproj", "{1A8C3C09-3055-4C86-A50B-E6F9218AD4BF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Telemetry.Test", "Telemetry.Test\Telemetry.Test.csproj", "{E0DB5C1C-FD26-410E-8127-F8CE8777B865}"
-	ProjectSection(ProjectDependencies) = postProject
-		{1A8C3C09-3055-4C86-A50B-E6F9218AD4BF} = {1A8C3C09-3055-4C86-A50B-E6F9218AD4BF}
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,7 +20,6 @@ Global
 		{E0DB5C1C-FD26-410E-8127-F8CE8777B865}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E0DB5C1C-FD26-410E-8127-F8CE8777B865}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E0DB5C1C-FD26-410E-8127-F8CE8777B865}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E0DB5C1C-FD26-410E-8127-F8CE8777B865}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

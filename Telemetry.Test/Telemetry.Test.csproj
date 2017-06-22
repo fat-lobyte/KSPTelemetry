@@ -45,12 +45,6 @@
     <Compile Include="TestTelemetry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Telemetry\Telemetry.csproj">
-      <Project>{1a8c3c09-3055-4c86-a50b-e6f9218ad4bf}</Project>
-      <Name>Telemetry</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>pdb2mdb $(TargetPath)</PostBuildEvent>
