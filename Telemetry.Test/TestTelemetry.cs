@@ -11,11 +11,11 @@ namespace Telemetry.Test
 
         public void Awake()
         {
-            TelemetryService.Instance.AddChannel("ut", typeof(double));
-            TelemetryService.Instance.AddChannel("altitude", typeof(double), "0000");
-            TelemetryService.Instance.AddChannel("srf_speed", typeof(double), "0000.0");
-            TelemetryService.Instance.AddChannel("static_pressure", typeof(double));
-            TelemetryService.Instance.AddChannel("partcount", typeof(int));
+            TelemetryService.Instance.AddChannel<double>("ut");
+            TelemetryService.Instance.AddChannel<double>("altitude", "0000");
+            TelemetryService.Instance.AddChannel<double>("srf_speed", "0000.0");
+            TelemetryService.Instance.AddChannel<double>("static_pressure");
+            TelemetryService.Instance.AddChannel<double>("partcount");
         }
 
         int lastPartCount = 0;
