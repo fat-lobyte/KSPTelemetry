@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 
 namespace Telemetry
 {
@@ -15,7 +16,7 @@ namespace Telemetry
 
         internal DataSet(string filename, TelemetryService.TelemetrySettings settings)
         {
-            this.Filename = filename;
+            Filename = filename;
             this.settings = settings;
         }
 
@@ -58,23 +59,32 @@ namespace Telemetry
             filestream.Write('\n');
         }
 
+        StringBuilder lineStringBuilder = new StringBuilder();
+
         public void Write()
         {
             if (filestream == null)
                 return;
 
-            uint channelIdx = 0;
-
-            foreach(IChannel channel in channels)
+            uint channelIdx = 0, updatedChannels = 0;
+            foreach (IChannel channel in channels)
             {
                 if (channelIdx++ > 0)
-                    filestream.Write(settings.ColumnSeparator);
+                    lineStringBuilder.Append(settings.ColumnSeparator);
 
                 if (channel.WasUpdated)
-                    filestream.Write(channel.Render());
+                {
+                    lineStringBuilder.Append(channel.Render());
+                    ++updatedChannels;
+                }
             }
 
-            filestream.Write('\n');
+            if (updatedChannels > 0)
+            {
+                filestream.WriteLine(lineStringBuilder.ToString());
+            }
+
+            lineStringBuilder.Length = 0;
         }
 
         internal void Flush()
