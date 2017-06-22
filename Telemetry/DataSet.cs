@@ -79,7 +79,8 @@ namespace Telemetry
 
         internal void Flush()
         {
-            filestream.Flush();
+            if (filestream != null)
+                filestream.Flush();
         }
 
         public void Close()
