@@ -70,6 +70,7 @@ namespace Telemetry
         }
 
         public void AddChannel<ChannelType>(string id, string format = null)
+            where ChannelType : IFormattable
         {
             // do not add channels more than once
             if (dispatcher.GetChannel(id) != null)

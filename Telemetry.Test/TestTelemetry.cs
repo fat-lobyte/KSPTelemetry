@@ -16,7 +16,7 @@ namespace TelemetryTest
             Telemetry.AddChannel<double>("altitude", "0000");
             Telemetry.AddChannel<double>("srf_speed", "0000.0");
             Telemetry.AddChannel<double>("static_pressure");
-            Telemetry.AddChannel<double>("partcount");
+            Telemetry.AddChannel<int>("partcount");
         }
 
         int lastPartCount = 0;

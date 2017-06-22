@@ -4,9 +4,8 @@ using System;
 namespace Telemetry
 {
     internal class NumericChannel<T> : IChannel
+        where T : IFormattable
     {
-        private const string defaultFormat = "0.0000";
-
         public string Name { get; private set; }
         public string Format { get; private set; }
 
@@ -23,7 +22,7 @@ namespace Telemetry
         public string Render()
         {
             WasUpdated = false;
-            return Format == null ? value.ToString() : string.Format(Format, value);
+            return Format == null ? value.ToString() : value.ToString(Format, null);
         }
 
         public void Send(object value)
