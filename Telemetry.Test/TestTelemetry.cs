@@ -1,6 +1,5 @@
 ﻿#if DEBUG
 
-using Telemetry;
 using UnityEngine;
 
 namespace TelemetryTest
