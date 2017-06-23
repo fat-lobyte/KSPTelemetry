@@ -133,6 +133,8 @@ namespace Telemetry
 
         internal void Start()
         {
+            lastFlush = DateTime.Now;
+            lastWriteUT = 0.0;
             foreach (DataSet ds in datasets)
                 ds.Open();
         }
