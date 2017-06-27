@@ -6,13 +6,13 @@ namespace TelemetryTest
 {
     public class Telemetry
     {
-        private static string thisAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+        private static string thisAssemblyName;
 
         private static object telemetryServiceInstance = null;
         private static MethodInfo addChannelMethod;
         private static MethodInfo sendMethod;
 
-
+        [System.Diagnostics.Conditional("DEBUG_TELEMETRY")]
         public static void AddChannel<ChannelType>(string id, string format = null)
             where ChannelType : IFormattable
         {
@@ -27,6 +27,7 @@ namespace TelemetryTest
             addChannelMethodConcrete.Invoke(telemetryServiceInstance, parameters);
         }
 
+        [System.Diagnostics.Conditional("DEBUG_TELEMETRY")]
         public static void Send(string id, object value)
         {
             if (telemetryServiceInstance == null)
@@ -39,6 +40,9 @@ namespace TelemetryTest
 
         static Telemetry()
         {
+#if DEBUG_TELEMETRY
+            thisAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
+
             // Search for telemetry assembly
             Type telemetryServiceType = null;
             foreach (var loadedAssembly in AssemblyLoader.loadedAssemblies)
@@ -62,6 +66,7 @@ namespace TelemetryTest
             sendMethod = telemetryServiceType.GetMethod("Send");
 
             Debug.Log(thisAssemblyName + " connected to Telemetry module.");
+#endif
         }
     }
 }
