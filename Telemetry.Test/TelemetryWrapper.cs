@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Reflection;
 using UnityEngine;
 
@@ -7,6 +8,9 @@ namespace TelemetryTest
     public class Telemetry
     {
 #if DEBUG_TELEMETRY
+        private const int APIVersionMajor = 0;
+        private const int APIVersionMinor = 1;
+
         private static string thisAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
 
         private static object telemetryServiceInstance = null;
@@ -47,6 +51,7 @@ namespace TelemetryTest
         static Telemetry()
         {
 #if DEBUG_TELEMETRY
+            int versionMajor = 0, versionMinor = 0;
 
             // Search for telemetry assembly
             Type telemetryServiceType = null;
@@ -55,22 +60,35 @@ namespace TelemetryTest
                 if (loadedAssembly.name != "Telemetry")
                     continue;
 
-                telemetryServiceInstance = telemetryServiceType = loadedAssembly.assembly.GetType("Telemetry.TelemetryService");
+                telemetryServiceType = loadedAssembly.assembly.GetType("Telemetry.TelemetryService");
+
+                var fvi = FileVersionInfo.GetVersionInfo(loadedAssembly.path);
+
+                versionMajor = fvi.FileMajorPart;
+                versionMinor = fvi.FileMinorPart;
             }
 
-            // if it's not loaded, bow and excuse ourselves
             if (telemetryServiceType == null)
             {
-                Debug.Log(thisAssemblyName + " could not find Telemetry module. Continuing without Telemetry.");
+                UnityEngine.Debug.Log(thisAssemblyName + " could not find Telemetry module. Continuing without Telemetry.");
                 return;
             }
+
+            if (versionMajor != APIVersionMajor || versionMinor < APIVersionMinor)
+            {
+                UnityEngine.Debug.Log(thisAssemblyName +
+                    " Telemetry module version " + versionMajor + "." + versionMinor + " is incompatible with the Wrapper version "
+                    + APIVersionMajor + "." + APIVersionMinor);
+                return;
+            }
+
 
             // if it's loaded, get instance and Send/AddChannel Methods
             telemetryServiceInstance = telemetryServiceType.GetProperty("Instance", telemetryServiceType).GetValue(null, null);
             addChannelMethod = telemetryServiceType.GetMethod("AddChannel");
             sendMethod = telemetryServiceType.GetMethod("Send");
 
-            Debug.Log(thisAssemblyName + " connected to Telemetry module.");
+            UnityEngine.Debug.Log(thisAssemblyName + " connected to Telemetry module.");
 #endif
         }
     }
