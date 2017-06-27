@@ -6,16 +6,19 @@ namespace TelemetryTest
 {
     public class Telemetry
     {
-        private static string thisAssemblyName;
+#if DEBUG_TELEMETRY
+        private static string thisAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
 
         private static object telemetryServiceInstance = null;
-        private static MethodInfo addChannelMethod;
-        private static MethodInfo sendMethod;
+        private static MethodInfo addChannelMethod = null;
+        private static MethodInfo sendMethod = null;
+#endif
 
         [System.Diagnostics.Conditional("DEBUG_TELEMETRY")]
         public static void AddChannel<ChannelType>(string id, string format = null)
             where ChannelType : IFormattable
         {
+#if DEBUG_TELEMETRY
             if (telemetryServiceInstance == null)
                 return;
 
@@ -25,23 +28,25 @@ namespace TelemetryTest
 
             var parameters = new object[] { thisAssemblyName + "/" + id, format };
             addChannelMethodConcrete.Invoke(telemetryServiceInstance, parameters);
+#endif
         }
 
         [System.Diagnostics.Conditional("DEBUG_TELEMETRY")]
         public static void Send(string id, object value)
         {
+#if DEBUG_TELEMETRY
             if (telemetryServiceInstance == null)
                 return;
 
             var parameters = new object[] { thisAssemblyName + "/" + id, value };
             sendMethod.Invoke(telemetryServiceInstance, parameters);
+#endif
         }
 
 
         static Telemetry()
         {
 #if DEBUG_TELEMETRY
-            thisAssemblyName = Assembly.GetExecutingAssembly().GetName().Name;
 
             // Search for telemetry assembly
             Type telemetryServiceType = null;
@@ -50,7 +55,7 @@ namespace TelemetryTest
                 if (loadedAssembly.name != "Telemetry")
                     continue;
 
-                telemetryServiceType = loadedAssembly.assembly.GetType("Telemetry.TelemetryService");
+                telemetryServiceInstance = telemetryServiceType = loadedAssembly.assembly.GetType("Telemetry.TelemetryService");
             }
 
             // if it's not loaded, bow and excuse ourselves
