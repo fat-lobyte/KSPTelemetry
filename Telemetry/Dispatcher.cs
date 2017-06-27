@@ -30,7 +30,7 @@ namespace Telemetry
             if (!channels.TryGetValue(path, out channel))
             {
 #if DEBUG
-                Debug.Log("Telemetry: tried to send value to unconfigured channel");
+                Debug.Log("Telemetry: tried to send value to unconfigured channel " + path);
 #endif
                 return;
             }
